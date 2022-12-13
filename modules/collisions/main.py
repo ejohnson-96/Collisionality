@@ -1,1 +1,1 @@
-print("hello")
+from modules.core.s
