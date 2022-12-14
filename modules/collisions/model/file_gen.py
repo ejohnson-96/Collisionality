@@ -1,47 +1,77 @@
+import pickle
+
 from modules.core.loadsave import file_dir as fd
 from modules.core.vars import num_man as nm, str_man as sm
 
 slash = fd.slash()
 
-def root(
 
+def load_path(
+        root
 ):
-    root = fd.dir_path()
-    for i in range(3):
-        root = fd.dir_drop(root)
-    return root
-
-def enc_gen(
-
-):
-
-    data_path = root() + slash + "data" + slash + "load" + slash
-
-    encs = []
-    encs_num = []
-
-    for folder in fd.dir_list(data_path):
-        if folder[0] == 'E':
-            encs.append(folder)
-            encs_num.append(folder[-1])
-
-    return encs, encs_num
+    sm.valid_str(root)
+    return sm.slash_dir(root) + "data" + slash + "load"
 
 
-def load_generate(
+def save_path(
         encounter,
+        root
+):
+    sm.valid_str(root)
+    nm.valid_num(encounter)
+    encounter = "E" + str(encounter)
+    return sm.slash_dir(root) + "data" + slash + "save" + slash + encounter + slash
+
+
+def error_files_loaded(
+        encounter,
+        load_dir,
 
 ):
-    encounter = nm.valid_num(encounter, integer=True)
-
-    path = sm.jwos(root(), slash, 'data', slash, 'save', slash)
-    print(enc_gen()[0])
-    h = 1
-    while h > 1:
-        if encounter == 0:
-            return 'EA'
-        elif encounter in enc_gen()[0]:
-            return sm.jwos('E', str(int(encounter)))
+    enc_dir = load_dir + slash + "E" + str(encounter)
+    if fd.file_list(enc_dir) == 5:
+        return True
+    else:
+        return False
 
 
-load_generate(1)
+def data_import(
+        encounter,
+        root
+):
+    nm.valid_num(encounter)
+    load_dir = load_path(root)
+
+    # mm_data = rw.encounter_import(enc)
+    # sc_data = rw.sc_import(enc)
+
+    if error_files_loaded(encounter, load_dir):
+        error_data = 1
+    else:
+        error_data = None
+
+    print('\nData import successful.\n')
+
+    return
+
+
+def position_import(
+        encounter,
+        root
+):
+    nm.valid_num(encounter)
+
+    position_dir = sm.slash_dir(load_path(root)) + "E" + str(encounter) + slash + "Position" + slash
+    position_files = []
+
+    if position_dir:
+        for file in fd.dir_list(position_dir):
+            if file[0] != ".":
+                position_files.append(file)
+
+    for file in position_files:
+        print(file)
+
+    return position_dir, position_files
+
+
