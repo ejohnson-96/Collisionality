@@ -1,5 +1,5 @@
-import pickle
 
+from modules.core.loadsave
 from modules.core.loadsave import file_dir as fd
 from modules.core.vars import num_man as nm, str_man as sm
 
@@ -68,9 +68,9 @@ def position_import(
         for file in fd.dir_list(position_dir):
             if file[0] != ".":
                 position_files.append(file)
-
+    args = []
     for file in position_files:
-        print(file)
+        args.append()
 
     return position_dir, position_files
 
