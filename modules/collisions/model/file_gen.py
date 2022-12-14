@@ -1,6 +1,5 @@
 
-from modules.core.loadsave
-from modules.core.loadsave import file_dir as fd
+from modules.core.loadsave import file_dir as fd, file_import as fi
 from modules.core.vars import num_man as nm, str_man as sm
 
 slash = fd.slash()
@@ -22,6 +21,16 @@ def save_path(
     encounter = "E" + str(encounter)
     return sm.slash_dir(root) + "data" + slash + "save" + slash + encounter + slash
 
+def loaded_files(
+        encounter,
+        load_dir
+):
+    enc_dir = load_dir + slash + "E" + str(encounter)
+    files = []
+    for file in fd.file_list(enc_dir):
+        if file[0] != ".":
+            files.append(file)
+    return files
 
 def error_files_loaded(
         encounter,
@@ -29,7 +38,7 @@ def error_files_loaded(
 
 ):
     enc_dir = load_dir + slash + "E" + str(encounter)
-    if fd.file_list(enc_dir) == 5:
+    if len(fd.file_list(enc_dir)) == 5:
         return True
     else:
         return False
@@ -41,18 +50,21 @@ def data_import(
 ):
     nm.valid_num(encounter)
     load_dir = load_path(root)
+    load_files = loaded_files(encounter, load_dir)
 
-    # mm_data = rw.encounter_import(enc)
-    # sc_data = rw.sc_import(enc)
+    data = {}
+    print(load_files)
+    for file in load_files:
+        data[file] = (fi.file_import(file, load_dir + slash + "E" + str(encounter)))
 
     if error_files_loaded(encounter, load_dir):
-        error_data = 1
+        error_data = True
     else:
-        error_data = None
+        error_data = False
 
     print('\nData import successful.\n')
 
-    return
+    return data, error_data
 
 
 def position_import(
@@ -68,10 +80,10 @@ def position_import(
         for file in fd.dir_list(position_dir):
             if file[0] != ".":
                 position_files.append(file)
-    args = []
+    position_data = []
     for file in position_files:
-        args.append()
+        position_data.append(fi.file_import(file, position_dir))
 
-    return position_dir, position_files
+    return position_data  #position_dir, position_files
 
 
