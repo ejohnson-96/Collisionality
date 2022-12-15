@@ -2,7 +2,7 @@ import h5py
 import pickle
 import pandas as pd
 
-from modules.core.loadsave import file_dir as fd, types as ft
+from modules.core.loadsave import file_dir as fd, file_types as ft
 from modules.core.vars.char_man import del_beg
 from modules.core.vars.str_man import valid_str, slash_dir
 

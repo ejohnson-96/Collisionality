@@ -50,10 +50,11 @@ def data_import(
 ):
     nm.valid_num(encounter)
     load_dir = load_path(root)
+
     load_files = loaded_files(encounter, load_dir)
 
     data = {}
-    print(load_files)
+
     for file in load_files:
         data[file] = (fi.file_import(file, load_dir + slash + "E" + str(encounter)))
 
@@ -62,7 +63,7 @@ def data_import(
     else:
         error_data = False
 
-    print('\nData import successful.\n')
+    print(f'\nE{encounter} data import successful.')
 
     return data, error_data
 
@@ -73,17 +74,35 @@ def position_import(
 ):
     nm.valid_num(encounter)
 
-    position_dir = sm.slash_dir(load_path(root)) + "E" + str(encounter) + slash + "Position" + slash
+
+    position_files = loaded_position(encounter, root)
+    position_data = {}
+    for file in position_files:
+        position_data[file] = (fi.file_import(file, position_dir(encounter, root)))
+
+    return position_data
+
+
+def position_dir(
+        encounter,
+        root
+):
+    return sm.slash_dir(load_path(root)) + "E" + str(encounter) + slash + "Position" + slash
+
+def loaded_position(
+        encounter,
+        root,
+):
+    sm.valid_str(root)
     position_files = []
 
-    if position_dir:
-        for file in fd.dir_list(position_dir):
+    loc = position_dir(int(encounter), root)
+
+    if fd.dir_exist(loc):
+        for file in fd.dir_list(loc):
             if file[0] != ".":
                 position_files.append(file)
-    position_data = []
-    for file in position_files:
-        position_data.append(fi.file_import(file, position_dir))
+    return position_files
 
-    return position_data  #position_dir, position_files
 
 

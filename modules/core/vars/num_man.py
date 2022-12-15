@@ -9,11 +9,11 @@ def valid_var(
 ):
     valid_bool(integer, floats)
     if integer and floats:
-        return int, float
+        return int, float, np.int64, np.int32, np.float
     elif integer and not floats:
-        return int
+        return int, np.int64, np.int32,
     elif not integer and floats:
-        return float
+        return float, np.float
     else:
         raise ValueError(
             "Arguments integer and floats cannot both be False, "

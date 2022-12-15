@@ -23,17 +23,17 @@ def enc_gen(
     encs_num = []
 
     for folder in fd.dir_list(data_path):
-        if folder[0] == 'E' and len(folder) == 2:
+        if folder[0] == 'E' and len(folder) < 4:
             encs.append(folder)
-            encs_num.append(folder[-1])
+            encs_num.append(folder[1:len(folder)])
 
-    return encs, encs_num
+    return {"EX":encs, "X":encs_num}
 
 
 def enc_selector(
 
 ):
-    print('Currently loaded encounters:', enc_gen()[0], '\n')
+    print('Currently loaded encounters:', enc_gen()["EX"], '\n')
 
     valid_full = ['f', 'full', 'ful', 'fu', 'ull', 'ff']
     valid_single = ['s', 'single', 'ss', 'sngle', 'sig', 'ingle', ]
@@ -51,7 +51,7 @@ def enc_selector(
             while g > 0:
                 enc_input = input('Please enter an encounter:')
                 if enc_input.isdigit():
-                    if enc_input in enc_gen()[1]:
+                    if enc_input in enc_gen()["X"]:
                         encounter = int(enc_input)
                         g = 0
                     else:
@@ -65,3 +65,11 @@ def enc_selector(
             print('Error: Please make a valid selection.')
 
     return int(encounter)
+
+
+def particle_gen(
+
+):
+    p = 'proton'
+    a = 'alpha'
+    return  [p, a]

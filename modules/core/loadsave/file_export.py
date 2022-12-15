@@ -6,7 +6,7 @@ import pandas as pd
 from modules.core.vars.bool_man import valid_bool
 from modules.core.vars.char_man import low_all_let, del_beg
 from modules.core.vars.str_man import valid_str, slash_dir
-from modules.core.loadsave import file_dir as fd, types as ft
+from modules.core.loadsave import file_dir as fd, file_types as ft
 
 slash = fd.slash()
 valid_types = ft.types
