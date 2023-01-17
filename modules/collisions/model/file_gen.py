@@ -1,4 +1,3 @@
-
 from modules.core.loadsave import file_dir as fd, file_import as fi
 from modules.core.vars import num_man as nm, str_man as sm
 
@@ -21,6 +20,7 @@ def save_path(
     encounter = "E" + str(encounter)
     return sm.slash_dir(root) + "data" + slash + "save" + slash + encounter + slash
 
+
 def loaded_files(
         encounter,
         load_dir
@@ -31,6 +31,7 @@ def loaded_files(
         if file[0] != ".":
             files.append(file)
     return files
+
 
 def error_files_loaded(
         encounter,
@@ -74,7 +75,6 @@ def position_import(
 ):
     nm.valid_num(encounter)
 
-
     position_files = loaded_position(encounter, root)
     position_data = {}
     for file in position_files:
@@ -88,6 +88,7 @@ def position_dir(
         root
 ):
     return sm.slash_dir(load_path(root)) + "E" + str(encounter) + slash + "Position" + slash
+
 
 def loaded_position(
         encounter,
@@ -103,6 +104,3 @@ def loaded_position(
             if file[0] != ".":
                 position_files.append(file)
     return position_files
-
-
-
