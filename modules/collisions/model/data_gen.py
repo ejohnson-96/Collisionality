@@ -1,6 +1,7 @@
+import datetime
 import numpy as np
 
-from modules.core.vars import bool_man as bm, num_man as nm
+from modules.core.vars import bool_man as bm, num_man as nm, char_man as cm, str_man as sm
 from modules.collisions.model import enc_gen as eg, file_gen as fg
 
 
@@ -48,15 +49,19 @@ def data_validate(
 
     for enc in position.keys():
         for file in position[enc].keys():
-            # print(file, position[enc][file])
+            print(file, position[enc][file])
+            print(position[enc][file].keys())
             for param in position[enc][file].keys():
-                if param == "datetime":
-                    for i in range(len(position[enc][file][param])):
-                        position[enc][file][param][i] = 1  # convertdate
-                    # remane param
-                    # delete previous datetime param
+                print(param)
+
                 for i in range(len(position[enc][file][param])):
-                    nm.valid_num(position[enc][file][param][i])
+
+                    print("cunt", position[enc][file][i])
+                    if isinstance(position[enc][file][i], str):
+                        print("major cunt")
+                        position[enc][file][param][i] = datetime_format(position[enc][file][param][i])
+                    else:
+                        nm.valid_num(position[enc][file][param][i])
 
     return parker, position, errors
 
@@ -128,65 +133,43 @@ def data_combine(
         position,
         particles
 ):
-    print("dsfsdfasd")
     park_out = {}
     pos_out = {}
 
     for particle in particles:
         park_out[particle] = {}
-        for type in ["data", "errors"]:
-            park_out[particle][type] = {}
 
-    enc = parker.keys()
-
-    test = []
     for enc in parker.keys():
-        test.append(parker[enc][1])
+        part_files = []
+        error_files = []
+
+        for file in parker[enc][0].keys():
+            if "errors" in file:
+                error_files.append(file)
+            else:
+                part_files.append(file)
+
+        for particle in particles:
+            for file in part_files:
+                if particle in file:
+                    for param in parker[enc][0][file].keys():
+                        if not param in park_out[particle].keys():
+                            park_out[particle][param] = []
+                        for i in range(len(parker[enc][0][file][param])):
+                            park_out[particle][param].append(parker[enc][0][file][param][i])
 
 
+        for file in position[enc].keys():
+            if not file in pos_out.keys():
+                pos_out[file] = {}
+            for param in position[enc][file].keys():
+                if not param in pos_out[file].keys():
+                    pos_out[file][param] = []
+                for i in range(len(position[enc][file][param])):
+                    pos_out[file][param].append(position[enc][file][param][i])
 
-    print(x)
-    print()
-
-    print(park_out)
 
     return park_out, pos_out
-
-
-
-def data_resize(
-        parker,
-        position,
-):
-    t = 'time'
-    factors = factor_gen(parker, position)
-    cad = factor_gen(parker, position, True)
-
-    for enc in parker.keys():
-        for file in parker[enc][0].keys():
-            parker[enc][0][file] = data_cadence(parker[enc][0][file], factors[0][enc][file])
-
-    for enc in position.keys():
-        for file in position[enc].keys():
-            position[enc][file] = data_cadence(position[enc][file], factors[1][enc][file])
-
-    #print(cad)
-    #t_ = parker['E6'][0]['E6_alphas.csv'][t]
-    #t_ = int(10000)
-
-    #for enc in parker.keys():
-    #    for file in parker[enc][0].keys():
-    #        for param in parker[enc][0][file].keys():
-
-
-    #for enc in position.keys():
-    #    for file in position[enc].keys():
-    #        xp = position[enc][file][t]
-    #        for param in position[enc][file].keys():
-    #            fp = position[enc][file][param]
-    #            position[enc][file][param] = np.interp(t_, xp, fp)
-
-    return parker, position
 
 
 def data_cadence(
@@ -208,3 +191,36 @@ def data_cadence(
                 res[y].append(arg_)
     return res
 
+def datetime_format(
+        entry,
+        epoch=False,
+):
+    entry = sm.valid_string(entry)
+    entry = cm.remove_end(entry)
+    entry = sm.split(entry, 'T')
+
+    date = sm.split(entry[0], '-')
+    time = sm.split(entry[1], ':')
+
+    if epoch:
+        return datetime_epoch(datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]), int(float(time[2]))))
+    else:
+        return datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]), int(float(time[2])))
+
+
+def datetime_epoch(
+        entry,
+):
+    entry = valid_datetime(entry)
+    return (entry - datetime.datetime(1970, 1, 1)).total_seconds()
+
+def valid_datetime(
+        entry,
+):
+    if not isinstance(entry, datetime.datetime):
+        raise TypeError(
+            f"Error: Argument {entry}, is not a datetime type, "
+            f"instead got type of {type(entry)}. "
+        )
+    else:
+        return entry

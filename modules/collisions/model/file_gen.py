@@ -1,5 +1,8 @@
+import pickle
 from modules.core.loadsave import file_dir as fd, file_import as fi
 from modules.core.vars import num_man as nm, str_man as sm
+from modules.collisions.model import scalar_gen as sc_gen
+from modules.collisions.features import latlong as ll
 
 slash = fd.slash()
 
@@ -104,3 +107,59 @@ def loaded_position(
             if file[0] != ".":
                 position_files.append(file)
     return position_files
+
+def save_file(
+        loc,
+        file
+):
+    sm.valid_str(loc)
+    loc = sm.slash_dir(loc)
+    with open(loc + '.pkl', 'wb') as handle:
+        pickle.dump(file, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    return
+
+def scalar_gen(
+        parker,
+        position,
+):
+    parker = speed_gen(parker)
+    position = ll.lat_long(position)
+    psp_temps, wind_temps = temp_gen(parker, position)
+    print('Generating velocity magnitudes and temperature file... \n')
+    return parker, psp_temps, wind_temps
+
+def speed_gen(
+        parker,
+):
+    return sc_gen.scalar_velocity(parker)
+
+def temp_gen(
+        parker,
+        position,
+):
+    return sc_gen.scalar_temps(parker, position)
+
+def save_file(
+        file,
+        name,
+        save_loc
+):
+    loc = sm.slash_dir(save_loc) + str(name)
+
+    with open(loc + '.pkl', 'wb') as handle:
+        pickle.dump(file, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    return
+
+name = ['parker', 'position', 'errors', 'psp_data', 'wind_data']
+def load_files(
+        save_loc,
+):
+    solar = fi.file_import(name[0] + '.pkl', sm.slash_dir(save_loc))
+    space = fi.file_import(name[1] + '.pkl', sm.slash_dir(save_loc))
+    error = fi.file_import(name[2] + '.pkl', sm.slash_dir(save_loc))
+    psp = fi.file_import(name[3] + '.pkl', sm.slash_dir(save_loc))
+    wind = fi.file_import(name[4] + '.pkl', sm.slash_dir(save_loc))
+
+    return solar, space, error, psp, wind

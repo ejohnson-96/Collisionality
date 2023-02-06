@@ -7,14 +7,9 @@ from modules.collisions.model import file_gen as fg, enc_gen as eg
 def lat_long(
         position,
 ):
-    for encounter in position.keys():
-        print(encounter)
-        spc = fg.loaded_position(encounter, eg.root())
-        print(spc)
 
-    # for encounter in space.keys():
-    #    space[encounter][enc.sc_names[2]] = latlong_psp(space[encounter][enc.sc_names[2]])
-    #    space[encounter][enc.sc_names[1]] = latlong_wind(space[encounter][enc.sc_names[1]])
+    position["PSP_Orbit.csv"] = latlong_psp(position["PSP_Orbit.csv"])
+    position["Wind_Orbit.csv"] = latlong_wind(position["Wind_Orbit.csv"])
 
     return position
 
@@ -50,7 +45,7 @@ def latlong_psp(
     for j in range(length):
         result[key_list[0]][j] = time[j]
         result[key_list[1]][j] = np.sqrt(
-            (psp_hgi_x[j]) ** 2 + (psp_hgi_y[j]) ** 2 + (psp_hgi_z[j]) ** 2)
+            (psp_hgi_x[j]) ** 2 + (psp_hgi_y[j]) ** 2 + (psp_hgi_z[j]) ** 2) * (6.68459*10**-9)
         result[key_list[2]][j] = np.arctan2(
             np.sqrt((psp_hgi_x[j] ** 2) + (psp_hgi_y[j] ** 2)),
             psp_hgi_z[j]) * fact  # Theta
