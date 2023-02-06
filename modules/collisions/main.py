@@ -42,14 +42,15 @@ def generate_theta(
     return
 
 
-generate_files()
-#theta_ap_f = generate_theta()
+#generate_files()
+theta_ap_f = generate_theta()
 
 
 solar, space, error, psp, wind = fg.load_files(save_dir)
-print(wind)
+print(space.keys())
+print(theta_ap_f)
 
-x = psp['theta_ap']
+x = theta_ap_f #psp['theta_ap']
 weg = np.ones_like(x) / float(len(x))
 
 plt.figure(figsize=(10, 10))

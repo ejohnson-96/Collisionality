@@ -49,17 +49,10 @@ def data_validate(
 
     for enc in position.keys():
         for file in position[enc].keys():
-            print(file, position[enc][file])
-            print(position[enc][file].keys())
             for param in position[enc][file].keys():
-                print(param)
-
                 for i in range(len(position[enc][file][param])):
-
-                    print("cunt", position[enc][file][i])
-                    if isinstance(position[enc][file][i], str):
-                        print("major cunt")
-                        position[enc][file][param][i] = datetime_format(position[enc][file][param][i])
+                    if isinstance(position[enc][file][param][i], str) and param == "time":
+                        position[enc][file][param][i] = datetime_format(position[enc][file][param][i], epoch=True)
                     else:
                         nm.valid_num(position[enc][file][param][i])
 
@@ -168,6 +161,19 @@ def data_combine(
                 for i in range(len(position[enc][file][param])):
                     pos_out[file][param].append(position[enc][file][param][i])
 
+    t_ = park_out["proton"]["time"]
+
+    for particle in park_out:
+        xp = park_out[particle]["time"]
+        for param in park_out[particle].keys():
+            fp = park_out[particle][param]
+            park_out[particle][param] = np.interp(t_, xp, fp)
+
+    for file in pos_out:
+        xp = pos_out[file]["time"]
+        for param in pos_out[file].keys():
+            fp = pos_out[file][param]
+            pos_out[file][param] = np.interp(t_, xp, fp)
 
     return park_out, pos_out
 
@@ -195,8 +201,8 @@ def datetime_format(
         entry,
         epoch=False,
 ):
-    entry = sm.valid_string(entry)
-    entry = cm.remove_end(entry)
+    sm.valid_str(entry)
+    entry = cm.del_end(entry)
     entry = sm.split(entry, 'T')
 
     date = sm.split(entry[0], '-')
