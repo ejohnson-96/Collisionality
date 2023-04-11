@@ -52,7 +52,7 @@ def theta_ap_0(r_0, r_1, n_p_1, eta_ap, v_p_1, t_p_1, theta_ap_1,
         else:
             pass
 
-        lambda_ap = 9 - np.log(arg_)
+        lambda_ap = 9 + np.log(arg_)
 
         x = (v_p * t_p ** 1.5)
         y = (eta_ap + 1) ** 2.5

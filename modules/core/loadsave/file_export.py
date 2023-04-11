@@ -20,7 +20,7 @@ def validate(
     valid_str(filename, path)
     valid_bool(warning)
 
-    if fd.dir_exists(path):
+    if fd.dir_exist(path):
         if fd.file_exists(slash_dir(path) + filename):
             if warning:
                 h = 0
@@ -29,19 +29,19 @@ def validate(
                         f"Location: {path}\n File: {filename}\n"
                         f"Do you wish to override the current file? (y/n)"
                     )
-                    if low_all_let(valid_str(usr_inp)) == 'y':
+                    if low_all_let(usr_inp) == 'y':
                         h = 1
-                    elif low_all_let(valid_str(usr_inp)) == 'n':
+                    elif low_all_let(usr_inp) == 'n':
                         sys.exit()
             return slash_dir(path) + filename
 
 
 def save_csv(
-        data,
-        filename,
-        path=fd.dir_path(),
-        warning=True,
-):
+        data: object,
+        filename: object,
+        path: object = fd.dir_path(),
+        warning: object = True,
+) -> object:
     loc = validate(filename, path, warning)
     if not isinstance(data, pd.DataFrame):
         raise TypeError(
@@ -49,7 +49,7 @@ def save_csv(
             " was provided. Please try again."
         )
     else:
-        return data.to_csv(loc)
+        return data.to_csv(loc, index=False)
 
 
 def save_pkl(

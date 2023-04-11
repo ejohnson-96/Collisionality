@@ -26,10 +26,13 @@ def data_import(
         for enc in valid_encs["X"]:
             parker_data["E" + str(enc)] = fg.data_import(int(enc), root)
             position_data["E" + str(enc)] = fg.position_import(int(enc), root)
+
     else:
         encount = "E" + str(encounter)
         parker_data[encount] = fg.data_import(encounter, root)
         position_data[encount] = fg.position_import(encounter, root)
+
+
 
     return parker_data, position_data
 
@@ -51,10 +54,7 @@ def data_validate(
         for file in position[enc].keys():
             for param in position[enc][file].keys():
                 for i in range(len(position[enc][file][param])):
-                    if isinstance(position[enc][file][param][i], str) and param == "time":
-                        position[enc][file][param][i] = datetime_format(position[enc][file][param][i], epoch=True)
-                    else:
-                        nm.valid_num(position[enc][file][param][i])
+                    nm.valid_num(position[enc][file][param][i])
 
     return parker, position, errors
 
@@ -173,6 +173,7 @@ def data_combine(
         xp = pos_out[file]["time"]
         for param in pos_out[file].keys():
             fp = pos_out[file][param]
+            print(file, param, len(xp), len(fp))
             pos_out[file][param] = np.interp(t_, xp, fp)
 
     return park_out, pos_out
@@ -197,36 +198,3 @@ def data_cadence(
                 res[y].append(arg_)
     return res
 
-def datetime_format(
-        entry,
-        epoch=False,
-):
-    sm.valid_str(entry)
-    entry = cm.del_end(entry)
-    entry = sm.split(entry, 'T')
-
-    date = sm.split(entry[0], '-')
-    time = sm.split(entry[1], ':')
-
-    if epoch:
-        return datetime_epoch(datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]), int(float(time[2]))))
-    else:
-        return datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]), int(float(time[2])))
-
-
-def datetime_epoch(
-        entry,
-):
-    entry = valid_datetime(entry)
-    return (entry - datetime.datetime(1970, 1, 1)).total_seconds()
-
-def valid_datetime(
-        entry,
-):
-    if not isinstance(entry, datetime.datetime):
-        raise TypeError(
-            f"Error: Argument {entry}, is not a datetime type, "
-            f"instead got type of {type(entry)}. "
-        )
-    else:
-        return entry

@@ -88,17 +88,17 @@ def temp_generate(
             psp_result['dens_ap'][i] = parker[a]["na"][i] / parker[p]["np1"][i]
 
     for i in range(L_w):
-        if position['Wind_Temps.csv']['TEMP_ALPHA_S/C_eV'][i] == 0:
+        if position['Wind_Temps.csv']['TEMPALPHAeV'][i] == 0:
             wind_result['wind_alpha_scalar_temp'][i] = float('Nan')
         else:
-            wind_result['wind_alpha_scalar_temp'][i] = position['Wind_Temps.csv']['TEMP_ALPHA_S/C_eV'][i]
+            wind_result['wind_alpha_scalar_temp'][i] = position['Wind_Temps.csv']['TEMPALPHAeV'][i]
 
-        if wind['TEMP_PROTN_S/C_eV'][i] == 0:
+        if wind['TEMPPROTNeV'][i] == 0:
             wind_result['wind_proton_scalar_temp'][i] = float('Nan')
             wind_result['wind_theta'][i] = float('Nan')
         else:
-            wind_result['wind_proton_scalar_temp'][i] = (wind['TEMP_PROTN_S/C_eV'][i])
+            wind_result['wind_proton_scalar_temp'][i] = (wind['TEMPPROTNeV'][i])
             wind_result['wind_theta'][i] = (
-                    wind['TEMP_ALPHA_S/C_eV'][i] / wind['TEMP_PROTN_S/C_eV'][i])
+                    wind['TEMPALPHAeV'][i] / wind['TEMPPROTNeV'][i])
 
     return psp_result, wind_result
